@@ -36,7 +36,6 @@ const ForgetPasswordPage = (props) => {
   const dispatch = useDispatch();
 
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
@@ -67,12 +66,12 @@ const ForgetPasswordPage = (props) => {
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
               <Card className="overflow-hidden">
-                <div className="bg-primary bg-softbg-soft-primary">
+                <div className="bg-secondary bg-soft">
                   <Row>
                     <Col xs={7}>
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Skote.</p>
+                        <h5 className="text-success">Welcome Back !</h5>
+                        <p className="text-success">Sign in to continue to Skote.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -140,7 +139,7 @@ const ForgetPasswordPage = (props) => {
                       <Row className="mb-3">
                         <Col className="text-end">
                           <button
-                            className="btn btn-primary w-md "
+                            className="btn btn-success w-md "
                             type="submit"
                           >
                             Reset

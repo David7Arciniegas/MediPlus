@@ -24,7 +24,6 @@ import profile from "../../assets/images/professional-icon.jpg";
 import logo from "../../assets/images/mp.svg";
 
 const ProfessionalDashboardLogin = (props) => {
-  // Set meta title
   useEffect(() => {
     document.title = "ProfessionalDashboardLogin";
   }, []);

@@ -50,7 +50,6 @@ const BasicDashboardLogin = (props) => {
           // Redirect to the Basic dashboard
           navigate("/basic-dashboard", { replace: true });
         } else {
-          // Handle login error
           console.error("Login error:", response.error);
         }
       } catch (error) {

@@ -45,11 +45,10 @@ function* loginProfessionalUser({ payload: { user, history } }) {
 
     if (response) {
       const { data, role } = response;
-      console.log("Role:", role);
+      console.log("Role:", role); //Shows the verified role in the browser
       if (role === "Professional") {
         yield put(loginProfessionalSuccess(data, role));
         history("/professional-dashboard");
-        // Perform any necessary action after successful login
 
         // Store the value of 'role' in local storage
         localStorage.setItem("authRole", role);
@@ -78,9 +77,9 @@ function* logoutProfessionalUser({ payload: { history } }) {
     localStorage.removeItem("authRole");
 
     yield put(logoutProfessionalSuccess(undefined, undefined));
-    console.log("Logout successful");
+   console.log("Logout successful");
     history("/professional-dashboard-login");
-    console.log("Logout successful");
+   console.log("Logout successful");
   } catch (error) {
     yield put(professionalApiError(error));
   }

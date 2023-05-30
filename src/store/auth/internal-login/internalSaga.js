@@ -86,7 +86,6 @@ function* socialLoginInternal({ payload: { type, history } }) {
       const fireBaseBackend = getFirebaseBackend();
       const response = yield call(fireBaseBackend.socialLoginUser, type);
       if (response) {
-        // Perform any necessary action after successful social login
       } else {
         // Perform any necessary action if social login fails
       }

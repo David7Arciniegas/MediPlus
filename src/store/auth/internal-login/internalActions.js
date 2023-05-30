@@ -18,7 +18,6 @@ export const loginInternalUser = (user, history) => {
 };
 
 export const loginInternalSuccess = (data, role) => {
-  //console.log(role)
   return {
     type: INTERNAL_LOGIN_SUCCESS,
     payload: {

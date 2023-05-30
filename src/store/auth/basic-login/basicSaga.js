@@ -45,7 +45,7 @@ function* loginBasicUser({ payload: { user, history } }) {
 
     if (response) {
       const { data, role } = response;
-      console.log("Role:", role);
+      console.log("Role:", role); //Shows the value of role in the browser
       if (role === "Basic") {
         yield put(loginBasicSuccess(data, role));
         history("/basic-dashboard");
