@@ -44,7 +44,7 @@ import {
   statistic_data,
   productData,
   cryptoOrderData,
-  mailDB
+  mailDB,
 } from "../../common/data";
 
 let users = [
@@ -55,7 +55,6 @@ let users = [
     email: "superadmin@example.com",
     role: "SuperAdministrator",
   },
-
 
   {
     uid: 2,
@@ -83,9 +82,9 @@ let users = [
 
   {
     uid: 5,
-    username: "Sand",
+    username: "Professional",
     password: "123456",
-    email: "sand@example.com",
+    email: "professional@example.com",
     role: "Professional",
   },
 
@@ -105,21 +104,21 @@ const fakeBackend = () => {
     });
   });
 
-
-
   mock.onPost("/post-fake-login").reply((config) => {
     const user = JSON.parse(config["data"]);
     const validUser = users.find(
       (usr) => usr.email === user.email && usr.password === user.password
     );
-  
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (validUser) {
           if (
             validUser.role === "SuperAdministrator" ||
             validUser.role === "Administrator" ||
-            validUser.role === "Moderator"
+            validUser.role === "Moderator" ||
+            validUser.role === "Professional" ||
+            validUser.role === "Basic"
           ) {
             resolve([200, { data: validUser, role: validUser.role }]);
           } else {
@@ -177,9 +176,6 @@ const fakeBackend = () => {
     });
   });
 
-
-
-  
   mock.onPost("/post-jwt-profile").reply((config) => {
     const user = JSON.parse(config["data"]);
     const validUser = users.find((usr) => usr.uid === user.uid);
@@ -379,10 +375,14 @@ const fakeBackend = () => {
           }
 
           if (folderHandle !== 6) {
-            const folderId = mailDB.folders.find(folder => folder.id === folderHandle).id;
-            response = mailDB.allmail.filter(mail => mail.folder === folderId);
+            const folderId = mailDB.folders.find(
+              (folder) => folder.id === folderHandle
+            ).id;
+            response = mailDB.allmail.filter(
+              (mail) => mail.folder === folderId
+            );
           } else {
-            response = mailDB.allmail.filter(mail => mail.starred === true);
+            response = mailDB.allmail.filter((mail) => mail.starred === true);
           }
 
           resolve([200, response]);
@@ -393,14 +393,14 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPost(url.GET_SELECTED_MAILS).reply(selectedmails => {
+  mock.onPost(url.GET_SELECTED_MAILS).reply((selectedmails) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (selectedmails && selectedmails.data) {
           const params = JSON.parse(selectedmails.data);
-          const data = Object.keys(params).map(k => parseInt(params[k]));
+          const data = Object.keys(params).map((k) => parseInt(params[k]));
           // Passing fake JSON data as response
-          resolve([200, (data.length > 1) ? data : params[0]]);
+          resolve([200, data.length > 1 ? data : params[0]]);
         } else {
           reject([400, "Cannot add selected mails"]);
         }
@@ -408,17 +408,17 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPost(url.SET_FOLDER_SELECTED_MAILS).reply(request => {
+  mock.onPost(url.SET_FOLDER_SELECTED_MAILS).reply((request) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (request && request.data) {
           const data = JSON.parse(request.data);
           const { selectedmails, folderId } = data;
-          mailDB.allmail = mailDB.allmail.map(mail => {
+          mailDB.allmail = mailDB.allmail.map((mail) => {
             if (selectedmails.includes(mail.id)) {
               return {
                 ...mail,
-                folder: parseInt(folderId)
+                folder: parseInt(folderId),
               };
             }
             return mail;
@@ -438,7 +438,7 @@ const fakeBackend = () => {
         if (mail && mail.data) {
           const data = JSON.parse(mail.data);
 
-          mailDB.allmail = mailDB.allmail.map(mail => {
+          mailDB.allmail = mailDB.allmail.map((mail) => {
             if (mail.id === data.id) {
               return { ...mail, ...data };
             }
@@ -452,7 +452,6 @@ const fakeBackend = () => {
       });
     });
   });
-
 
   mock.onPost(url.ADD_NEW_USER).reply((user) => {
     return new Promise((resolve, reject) => {
@@ -1089,11 +1088,10 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onGet(new RegExp(`${url.GET_VISITOR_DATA}/*`)).reply(config => {
+  mock.onGet(new RegExp(`${url.GET_VISITOR_DATA}/*`)).reply((config) => {
     return new Promise((resolve, reject) => {
       const { params } = config;
       setTimeout(() => {
-
         if (params && params.duration) {
           // Passing fake JSON data as response
           const { params } = config;

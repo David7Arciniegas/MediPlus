@@ -1,26 +1,25 @@
-
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import withRouter from "../../components/Common/withRouter";
-import { logoutInternalUser } from "../../store/actions"; // Update the import statement
+import { logoutInternalUser } from "../../store/actions";
 
 //redux
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-const history = useNavigate();
-const dispatch = useDispatch();
+  const history = useNavigate();
+  const dispatch = useDispatch();
 
-useEffect(() => {
-dispatch(logoutInternalUser(history)); // Update the function name to logoutInternalUser
-}, [dispatch, history]);
+  useEffect(() => {
+    dispatch(logoutInternalUser(history));
+  }, [dispatch, history]);
 
-return <></>;
+  return <></>;
 };
 
 Logout.propTypes = {
-history: PropTypes.object,
+  history: PropTypes.object,
 };
 
 export default withRouter(Logout);

@@ -4,6 +4,8 @@ import { all, fork } from "redux-saga/effects";
 import AccountSaga from "./auth/register/saga";
 import internalAuthSaga from "./auth/internal-login/internalSaga";
 import professionalAuthSaga from "./auth/professional-login/professionalSaga";
+import basicAuthSaga from "./auth/basic-login/basicSaga";
+
 import ForgetSaga from "./auth/forgetpwd/saga";
 import ProfileSaga from "./auth/profile/saga";
 import LayoutSaga from "./layout/saga";
@@ -49,9 +51,11 @@ export default function* rootSaga() {
 
     // Internal login
     fork(internalAuthSaga),
-    fork(internalSaga),
 
     // Professional login
     fork(professionalAuthSaga),
+
+    //Basic Login
+    fork(basicAuthSaga),
   ]);
 }

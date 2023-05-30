@@ -1,15 +1,15 @@
 import {
-  LOGIN_USER,
-  LOGIN_SUCCESS,
-  LOGOUT_USER,
-  LOGOUT_USER_SUCCESS,
-  API_ERROR,
-  SOCIAL_LOGIN,
+  INTERNAL_LOGIN_USER,
+  INTERNAL_LOGIN_SUCCESS,
+  INTERNAL_LOGOUT_USER,
+  INTERNAL_LOGOUT_USER_SUCCESS,
+  INTERNAL_API_ERROR,
+  INTERNAL_SOCIAL_LOGIN,
 } from "./internalActionTypes";
 
 export const loginInternalUser = (user, history) => {
   return {
-    type: LOGIN_USER,
+    type: INTERNAL_LOGIN_USER,
     payload: {
       user,
       history,
@@ -20,7 +20,7 @@ export const loginInternalUser = (user, history) => {
 export const loginInternalSuccess = (data, role) => {
   //console.log(role)
   return {
-    type: LOGIN_SUCCESS,
+    type: INTERNAL_LOGIN_SUCCESS,
     payload: {
       data,
       role,
@@ -30,15 +30,14 @@ export const loginInternalSuccess = (data, role) => {
 
 export const logoutInternalUser = (history) => {
   return {
-    
-    type: LOGOUT_USER,
+    type: INTERNAL_LOGOUT_USER,
     payload: { history },
   };
 };
 
 export const logoutInternalSuccess = (user, role) => {
   return {
-    type: LOGOUT_USER_SUCCESS,
+    type: INTERNAL_LOGOUT_USER_SUCCESS,
     payload: {
       user,
       role,
@@ -48,14 +47,14 @@ export const logoutInternalSuccess = (user, role) => {
 
 export const internalApiError = (error) => {
   return {
-    type: API_ERROR,
+    type: INTERNAL_API_ERROR,
     payload: error,
   };
 };
 
 export const internalSocialLogin = (type, history) => {
   return {
-    type: SOCIAL_LOGIN,
+    type: INTERNAL_SOCIAL_LOGIN,
     payload: { type, history },
   };
 };

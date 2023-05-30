@@ -1,8 +1,15 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./internalActionTypes";
-import { internalApiError, loginInternalSuccess, logoutInternalSuccess } from "./internalActions";
+import { INTERNAL_LOGIN_USER, INTERNAL_LOGOUT_USER, INTERNAL_SOCIAL_LOGIN } from "./internalActionTypes";
+import {
+  internalApiError,
+  loginInternalSuccess,
+  logoutInternalSuccess,
+} from "./internalActions";
 import { getFirebaseBackend } from "../../../helpers/firebase_helper";
-import { postFakeLogin, postJwtLogin } from "../../../helpers/fakebackend_helper";
+import {
+  postFakeLogin,
+  postJwtLogin,
+} from "../../../helpers/fakebackend_helper";
 
 const fireBaseBackend = getFirebaseBackend();
 
@@ -12,8 +19,11 @@ function* loginInternalUser({ payload: { user, history } }) {
     const authMethod = import.meta.env.VITE_APP_DEFAULTAUTH;
 
     if (authMethod === "firebase") {
-      const fireBaseBackend = getFirebaseBackend();
-      response = yield call(fireBaseBackend.loginUser, user.email, user.password);
+      response = yield call(
+        fireBaseBackend.loginUser,
+        user.email,
+        user.password
+      );
       localStorage.setItem("authUser", JSON.stringify(response));
     } else if (authMethod === "jwt") {
       response = yield call(postJwtLogin, {
@@ -32,14 +42,20 @@ function* loginInternalUser({ payload: { user, history } }) {
     if (response) {
       const { data, role } = response;
       console.log("Role:", role);
-      if (role === "SuperAdministrator") {
+      if (
+        role === "SuperAdministrator" ||
+        role === "Administrator" ||
+        role === "Moderator"
+      ) {
         yield put(loginInternalSuccess(data, role));
-        // Perform any necessary action after successful login
+        history("/internal-dashboard");
 
         // Store the value of 'role' in local storage
         localStorage.setItem("authRole", role);
-      } else if (role === "Basic") {
-        throw new Error("Unauthorized access. User does not have the required role.");
+      } else if (role === "Basic" || role === "Professional") {
+        throw new Error(
+          "Unauthorized access. User does not have the required role."
+        );
       }
     } else {
       throw new Error("User not found");
@@ -55,11 +71,10 @@ function* logoutInternalUser({ payload: { history } }) {
     localStorage.removeItem("authUser");
     localStorage.removeItem("authRole");
 
-    if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(fireBaseBackend.logout);
-      yield put(logoutInternalSuccess(response));
-    }
-    // Perform any necessary action after successful logout
+    yield put(logoutInternalSuccess(undefined, undefined));
+
+    history("/internal-dashboard-login");
+    console.log("Logout successful");
   } catch (error) {
     yield put(internalApiError(error));
   }
@@ -78,7 +93,7 @@ function* socialLoginInternal({ payload: { type, history } }) {
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginInternalSuccess(response));
       if (response) {
-        // Perform any necessary action after successful login
+        history("/internal-dashboard-login");
       }
     }
   } catch (error) {
@@ -87,9 +102,9 @@ function* socialLoginInternal({ payload: { type, history } }) {
 }
 
 function* internalAuthSaga() {
-  yield takeEvery(LOGIN_USER, loginInternalUser);
-  yield takeLatest(SOCIAL_LOGIN, socialLoginInternal);
-  yield takeEvery(LOGOUT_USER, logoutInternalUser);
+  yield takeEvery(INTERNAL_LOGIN_USER, loginInternalUser);
+  yield takeLatest(INTERNAL_SOCIAL_LOGIN, socialLoginInternal);
+  yield takeEvery(INTERNAL_LOGOUT_USER, logoutInternalUser);
 }
 
 export default internalAuthSaga;

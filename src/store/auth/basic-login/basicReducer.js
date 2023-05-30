@@ -10,6 +10,8 @@ import {
 const initialState = {
   error: "",
   loading: false,
+  user: null,
+  role: null,
 };
 
 const basicReducer = (state = initialState, action) => {
@@ -18,17 +20,21 @@ const basicReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
+        error: null,
       };
     case BASIC_LOGIN_SUCCESS:
       return {
         ...state,
         loading: false,
+        user: action.payload.data,
+        role: action.payload.role,
+        error: null,
       };
-    case BASIC_LOGOUT_USER:
-      return { ...state };
-    case BASIC_LOGOUT_USER_SUCCESS:
-      return { ...state };
-    case BASIC_API_ERROR:
+      case BASIC_LOGOUT_USER:
+        return initialState; // Reset the state to initial values
+      case BASIC_LOGOUT_USER_SUCCESS:
+        return initialState; 
+      case BASIC_API_ERROR:
       return { ...state, error: action.payload, loading: false };
     default:
       return state;

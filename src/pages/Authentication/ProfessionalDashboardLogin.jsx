@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
-// Redux
-import { useSelector, useDispatch } from "react-redux";
-
-// Formik validation
-import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginProfessionalUser,
+  professionalSocialLogin,
+} from "../../store/actions";
 import { useFormik } from "formik";
-
+import * as Yup from "yup";
 import {
   Row,
   Col,
@@ -22,23 +20,22 @@ import {
   FormFeedback,
   Label,
 } from "reactstrap";
-
-// Actions
-import { loginProfessionalUser, professionalSocialLogin } from "../../store/actions";
-
-// Import images
 import profile from "../../assets/images/professional-icon.jpg";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/mp.svg";
 
 const ProfessionalDashboardLogin = (props) => {
-  // Meta title
-  document.title = "Login";
+  // Set meta title
+  useEffect(() => {
+    document.title = "ProfessionalDashboardLogin";
+  }, []);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const validation = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: "professional@example.com" || "",
+      email: "professional@example.com",
       password: "123456" || "",
     },
     validationSchema: Yup.object({
@@ -47,32 +44,35 @@ const ProfessionalDashboardLogin = (props) => {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await dispatch(loginProfessionalUser(values, props.router.navigate));
-        const role = response.data?.role;
-        if (role === "professionalUser") {
-          props.router.navigate("/professional-dashboard");
+        const response = dispatch(loginProfessionalUser(values, navigate));
+
+        // Check if the login was successful
+        if (!response?.error) {
+          // Redirect to the internal dashboard
+          navigate("/professional-dashboard", { replace: true });
         } else {
-          console.error("Access denied. Only ProfessionalUsers are allowed.");
-          console.log(values)
+          // Handle login error
+          console.error("Login error:", response.error);
         }
       } catch (error) {
-        console.error("Error occurred:", error);
+        console.error("An error occurred:", error);
       }
     },
   });
 
   const { error } = useSelector((state) => ({
-    error: state.professionaLogin?.error,
+    error: state.professionalLogin?.error,
   }));
 
   const signIn = (type) => {
-    dispatch(professionalSocialLogin(type, props.router.navigate));
+    dispatch(professionalSocialLogin(type, navigate));
   };
 
-  // For Facebook and Google authentication
-  const socialResponse = (type) => {
+  const socialResponse = (type, e) => {
+    e.preventDefault();
     signIn(type);
   };
+
   return (
     <React.Fragment>
       <div className="home-btn d-none d-sm-block">
@@ -85,7 +85,7 @@ const ProfessionalDashboardLogin = (props) => {
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
               <Card className="overflow-hidden">
-                <div className="">
+                <div className="bg-secondary bg-soft">
                   <Row>
                     <Col xs={7}>
                       <div className="text-primary p-4">
@@ -106,18 +106,18 @@ const ProfessionalDashboardLogin = (props) => {
                 </div>
                 <CardBody className="pt-0">
                   <div>
-                    {/* '<Link to="/" className="auth-logo-light">
-                  <div className="avatar-md profile-user-wid mb-4">
-                    <span className="avatar-title rounded-circle bg-light">
-                      <img
-                        src={"2"}
-                        alt=""
-                        className="rounded-circle"
-                        height="34"
-                      />
-                    </span>
-                  </div>
-                </Link>' */}
+                    <Link to="/" className="auth-logo-light">
+                      <div className="avatar-md profile-user-wid mb-4">
+                        <span className="avatar-title rounded-circle bg-light">
+                          <img
+                            src={logo}
+                            alt=""
+                            className="rounded-circle"
+                            height="34"
+                          />
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                   <div className="p-2">
                     <Form
@@ -282,7 +282,7 @@ const ProfessionalDashboardLogin = (props) => {
   );
 };
 
-export default withRouter(ProfessionalDashboardLogin);
+export default ProfessionalDashboardLogin;
 
 ProfessionalDashboardLogin.propTypes = {
   history: PropTypes.object,

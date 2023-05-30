@@ -14,10 +14,13 @@ export const loginProfessionalUser = (user, history) => {
   };
 };
 
-export const loginProfessionalSuccess = (user) => {
+export const loginProfessionalSuccess = (data, role) => {
   return {
     type: PROFESSIONAL_LOGIN_SUCCESS,
-    payload: user,
+    payload: {
+      data,
+      role,
+      }
   };
 };
 
@@ -31,7 +34,10 @@ export const logoutProfessionalUser = (history) => {
 export const logoutProfessionalSuccess = () => {
   return {
     type: PROFESSIONAL_LOGOUT_USER_SUCCESS,
-    payload: {},
+    payload: {
+      user,
+      role
+    },
   };
 };
 

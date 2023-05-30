@@ -17,8 +17,8 @@ import {
   FormFeedback,
   Label,
 } from "reactstrap";
-import profile from "../../assets/images/profile-img.png";
-import logo from "../../assets/images/health-check.png";
+import boxImage from "../../assets/images/health-check.png";
+import logo from "../../assets/images/mp.svg";
 
 const InternalDashboardLogin = (props) => {
   // Set meta title
@@ -41,8 +41,8 @@ const InternalDashboardLogin = (props) => {
     }),
     onSubmit: async (values) => {
       try {
-        const response =  dispatch(loginInternalUser(values, navigate));
-    
+        const response = dispatch(loginInternalUser(values, navigate));
+
         // Check if the login was successful
         if (!response?.error) {
           // Redirect to the internal dashboard
@@ -70,7 +70,6 @@ const InternalDashboardLogin = (props) => {
     signIn(type);
   };
 
-
   return (
     <React.Fragment>
       <div className="home-btn d-none d-sm-block">
@@ -83,7 +82,7 @@ const InternalDashboardLogin = (props) => {
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
               <Card className="overflow-hidden">
-                <div className="">
+                <div className="bg-secondary bg-soft">
                   <Row>
                     <Col xs={7}>
                       <div className="text-primary p-4">
@@ -94,24 +93,29 @@ const InternalDashboardLogin = (props) => {
                       </div>
                     </Col>
                     <Col className="col-4 align-self-end">
-                      <img src={logo} alt="" className="img-fluid pt-4 p-3" />
+                      <img
+                        src={boxImage}
+                        alt=""
+                        className="img-fluid pt-3 p-4 w-70"
+                      />
                     </Col>
                   </Row>
                 </div>
                 <CardBody className="pt-0">
                   <div>
-                    {/* '<Link to="/" className="auth-logo-light">
-                  <div className="avatar-md profile-user-wid mb-4">
-                    <span className="avatar-title rounded-circle bg-light">
-                      <img
-                        src={"2"}
-                        alt=""
-                        className="rounded-circle"
-                        height="34"
-                      />
-                    </span>
-                  </div>
-                </Link>' */}
+                    <div> </div>
+                    <Link to="/" className="auth-logo-light">
+                      <div className="avatar-md profile-user-wid mb-4">
+                        <span className="avatar-title rounded-circle bg-light">
+                          <img
+                            src={logo}
+                            alt=""
+                            className="rounded-circle"
+                            height="40"
+                          />
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                   <div className="p-2">
                     <Form

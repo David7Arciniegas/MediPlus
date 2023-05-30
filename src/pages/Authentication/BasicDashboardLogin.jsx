@@ -1,15 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
-//redux
-import { useSelector, useDispatch } from "react-redux";
-
-// Formik validation
-import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginBasicUser, basicSocialLogin } from "../../store/actions";
 import { useFormik } from "formik";
-
+import * as Yup from "yup";
 import {
   Row,
   Col,
@@ -23,22 +18,21 @@ import {
   Label,
 } from "reactstrap";
 
-// actions
- import { loginBasicUser, basicSocialLogin } from "../../store/actions"; 
-
 // import images
-import profile from "../../assets/images/vector-icon-health.jpg";
-import logo from "../../assets/images/vector-icon-health.jpg";
+import boxImage from "../../assets/images/vector-icon-health.jpg";
+import logo from "../../assets/images/mp.svg";
 
 const BasicDashboardLogin = (props) => {
-  //meta title
-  document.title = "BasicUserLogin";
+  // Set meta title
+  useEffect(() => {
+    document.title = "BasicDashboardLogin";
+  }, []);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       email: "basic@example.com" || "",
       password: "123456" || "",
@@ -47,18 +41,21 @@ const BasicDashboardLogin = (props) => {
       email: Yup.string().required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => {
-      dispatch(loginBasicUser(values, props.router.navigate)).then((response) => {
-        // Assuming the API call returns the user's role in the response
-        const role = response.data.role;
+    onSubmit: async (values) => {
+      try {
+        const response = dispatch(loginBasicUser(values, navigate));
 
-        // Redirect the user to the corresponding dashboard based on their role
-        if (role === "BasicUser") {
-          props.router.navigate("/basic-dashboard");
+        // Check if the login was successful
+        if (!response?.error) {
+          // Redirect to the Basic dashboard
+          navigate("/basic-dashboard", { replace: true });
         } else {
-          console.error("Access denied. Only Basic Users are allowed.");
+          // Handle login error
+          console.error("Login error:", response.error);
         }
-      });
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     },
   });
 
@@ -67,11 +64,11 @@ const BasicDashboardLogin = (props) => {
   }));
 
   const signIn = (type) => {
-    dispatch(basicSocialLogin(type, props.router.navigate));
+    dispatch(basicSocialLogin(type, navigate));
   };
 
-  //for facebook and google authentication
-  const socialResponse = (type) => {
+  const socialResponse = (type, e) => {
+    e.preventDefault();
     signIn(type);
   };
 
@@ -87,7 +84,7 @@ const BasicDashboardLogin = (props) => {
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
               <Card className="overflow-hidden">
-                <div className="">
+                <div className="bg-secondary bg-soft">
                   <Row>
                     <Col xs={7}>
                       <div className="text-primary p-4">
@@ -99,27 +96,27 @@ const BasicDashboardLogin = (props) => {
                     </Col>
                     <Col className="col-4 align-self-end">
                       <img
-                        src={profile}
+                        src={boxImage}
                         alt=""
-                        className="img-fluid pt-4 p-2"
+                        className="img-fluid pt-3 p-3"
                       />
                     </Col>
                   </Row>
                 </div>
                 <CardBody className="pt-0">
                   <div>
-                    {/* '<Link to="/" className="auth-logo-light">
-                  <div className="avatar-md profile-user-wid mb-4">
-                    <span className="avatar-title rounded-circle bg-light">
-                      <img
-                        src={"2"}
-                        alt=""
-                        className="rounded-circle"
-                        height="34"
-                      />
-                    </span>
-                  </div>
-                </Link>' */}
+                    <Link to="/" className="auth-logo-light">
+                      <div className="avatar-md profile-user-wid mb-4">
+                        <span className="avatar-title rounded-circle bg-light">
+                          <img
+                            src={logo}
+                            alt=""
+                            className="rounded-circle"
+                            height="34"
+                          />
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                   <div className="p-2">
                     <Form
@@ -284,7 +281,7 @@ const BasicDashboardLogin = (props) => {
   );
 };
 
-export default withRouter(BasicDashboardLogin);
+export default BasicDashboardLogin;
 
 BasicDashboardLogin.propTypes = {
   history: PropTypes.object,

@@ -9,29 +9,33 @@ import {
 
 export const loginBasicUser = (user, history) => {
   return {
-    type:BASIC_LOGIN_USER,
+    type: BASIC_LOGIN_USER,
     payload: { user, history },
   };
 };
 
-export const loginbasicSuccess = (user) => {
+export const loginBasicSuccess = (data, role) => {
   return {
-    type:BASIC_LOGIN_SUCCESS,
-    payload: user,
+    type: BASIC_LOGIN_SUCCESS,
+    payload: data,
+    role,
   };
 };
 
-export const logoutbasicUser = (history) => {
+export const logoutBasicUser = (history) => {
   return {
-    type:BASIC_LOGOUT_USER,
+    type: BASIC_LOGOUT_USER,
     payload: { history },
   };
 };
 
-export const logoutbasicSuccess = () => {
+export const logoutBasicSuccess = (user, role) => {
   return {
-    type:BASIC_LOGOUT_USER_SUCCESS,
-    payload: {},
+    type: BASIC_LOGOUT_USER_SUCCESS,
+    payload: {
+      user,
+      role,
+    },
   };
 };
 

@@ -30,7 +30,6 @@ import avatar from "../../assets/images/users/avatar-1.jpg";
 import { editProfile, resetProfileFlag } from "../../store/actions";
 
 const UserProfile = (props) => {
-
   //meta title
   document.title = "Profile | Skote - React Admin & Dashboard Template";
 
@@ -40,7 +39,7 @@ const UserProfile = (props) => {
   const [name, setname] = useState("");
   const [idx, setidx] = useState(1);
 
-  const { error, success } = useSelector(state => ({
+  const { error, success } = useSelector((state) => ({
     error: state.Profile.error,
     success: state.Profile.success,
   }));
@@ -70,15 +69,15 @@ const UserProfile = (props) => {
     enableReinitialize: true,
 
     initialValues: {
-      username: name || '',
-      idx: idx || '',
+      username: name || "",
+      idx: idx || "",
     },
     validationSchema: Yup.object({
       username: Yup.string().required("Please Enter Your UserName"),
     }),
     onSubmit: (values) => {
       dispatch(editProfile(values));
-    }
+    },
   });
 
   return (
@@ -140,11 +139,15 @@ const UserProfile = (props) => {
                     onBlur={validation.handleBlur}
                     value={validation.values.username || ""}
                     invalid={
-                      validation.touched.username && validation.errors.username ? true : false
+                      validation.touched.username && validation.errors.username
+                        ? true
+                        : false
                     }
                   />
                   {validation.touched.username && validation.errors.username ? (
-                    <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
+                    <FormFeedback type="invalid">
+                      {validation.errors.username}
+                    </FormFeedback>
                   ) : null}
                   <Input name="idx" value={idx} type="hidden" />
                 </div>
